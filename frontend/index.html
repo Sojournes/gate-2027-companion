@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GATE 2027 ECE & FDE Study Companion | Diwakar's Mission Control</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <!-- Sticky Header with Live GATE Countdown, Buffer Countdown, Speed Selector & Mini Pomodoro -->
+  <header class="top-header">
+    <div class="header-inner">
+      <div class="brand-block">
+        <div class="brand-logo">EC</div>
+        <div class="brand-title">
+          <h1>
+            GATE 2027 ECE Companion
+            <span class="badge-pill">Mission AIR &lt; 100</span>
+          </h1>
+          <div class="brand-subtitle">
+            11 ECE Subjects (PW 2027 / 2026 YT) • 56 PW Tests • Ed Donner 21.5h FDE • Anti-Burnout Planner
+          </div>
+        </div>
+      </div>
+
+      <div class="header-widgets">
+        <!-- Exam Countdown (Feb 6, 2027) -->
+        <div class="countdown-box exam-target" title="1st Session GATE 2027 Exam: 6 Feb 2027">
+          <div class="cd-number" id="examDaysLeft">87d</div>
+          <div class="cd-meta">
+            <strong>GATE Exam (6 Feb)</strong>
+            <span id="examLiveClock">87 Days Away</span>
+          </div>
+        </div>
+
+        <!-- 3-Week Buffer Countdown -->
+        <div class="countdown-box buffer-target" title="2.5-3 Weeks Buffer Window before Exam">
+          <div class="cd-number" id="bufferDaysCount">20d</div>
+          <div class="cd-meta">
+            <strong>Pre-Exam Buffer</strong>
+            <span id="bufferStartDateLabel">Starts ~17 Jan</span>
+          </div>
+        </div>
+
+        <!-- Playback Speed Selector (2x - 3x) -->
+        <div class="speed-control" title="PW Video Playback Speed (2x to 3x)">
+          <span>⚡ Video Speed:</span>
+          <select id="globalSpeedSelect">
+            <option value="2">2.0x</option>
+            <option value="2.25" selected>2.25x (Rec)</option>
+            <option value="2.5">2.5x</option>
+            <option value="2.75">2.75x</option>
+            <option value="3">3.0x</option>
+          </select>
+        </div>
+
+        <!-- Mini Pomodoro Pill -->
+        <div class="mini-pomo-pill">
+          <span>🍅</span>
+          <span class="mini-pomo-time" id="headerPomoDisplay">45:00</span>
+          <button class="btn btn-sm btn-primary" id="headerPomoToggleBtn">Start</button>
+          <button class="btn btn-sm" id="headerPomoResetBtn" title="Reset Timer">↺</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Navigation Bar -->
+  <nav class="nav-bar" id="mainNav">
+    <button class="nav-tab active" data-tab="dashboard">🎯 Command Center</button>
+    <button class="nav-tab" data-tab="planner">📅 88-Day Daily Planner</button>
+    <button class="nav-tab" data-tab="subjects">📺 11 ECE Subjects (PW 2027 / 2026 YT)</button>
+    <button class="nav-tab" data-tab="tests">📝 56 PW Test Series</button>
+    <button class="nav-tab" data-tab="recall">🧠 Spaced Repetition (Quiz &amp; Flashcards)</button>
+    <button class="nav-tab" data-tab="fde">🤖 Udemy FDE Course (21.5h)</button>
+    <button class="nav-tab" data-tab="pomodoro">⏱️ Pomodoro &amp; Free Deploy Guide</button>
+  </nav>
+
+  <!-- Main Workspace -->
+  <main class="main-container">
+    <!-- TAB 1: COMMAND CENTER DASHBOARD -->
+    <section class="tab-panel active" id="tab-dashboard">
+      <div class="kpi-grid" id="dashboardKpiGrid"></div>
+
+      <div class="two-col-grid">
+        <!-- Left Column: Today's Active Schedule & Quick Actions -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title" id="todayCardTitle">📅 Today's Mission Plan (Tue, 10 Nov 2026)</div>
+              <div style="font-size:0.78rem; color:var(--text-secondary);" id="todayCardSubtitle">
+                Off work at 6:30 PM • Study 7:00 PM – 12:00 AM • Includes 45m Gaming Recharge &amp; 12–1:30 AM Flex
+              </div>
+            </div>
+            <div style="display:flex; gap:0.4rem; flex-wrap:wrap;">
+              <button class="btn btn-sm" id="prevDayQuickBtn">◀ Prev Day</button>
+              <button class="btn btn-sm" id="nextDayQuickBtn">Next Day ▶</button>
+              <button class="btn btn-sm btn-amber" id="pushLateNightBtn" title="Push first unfinished task to 12:00 AM - 1:30 AM slot">
+                🌙 Push to 12–1:30 AM
+              </button>
+              <button class="btn btn-sm btn-emerald" id="moveTomorrowBtn" title="Move unfinished task to tomorrow's flex slot">
+                ⏭️ Defer Unfinished
+              </button>
+            </div>
+          </div>
+
+          <div class="task-list" id="dashboardTodayTasks"></div>
+        </div>
+
+        <!-- Right Column: Anti-Burnout Routine, Subject Roadmap & Due Spaced Reviews -->
+        <div style="display:flex; flex-direction:column; gap:1.25rem;">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">🛡️ Anti-Burnout &amp; Daily Routine Architecture</div>
+              <span class="badge-pill">Sustainable 87-Day Pace</span>
+            </div>
+            <div style="font-size:0.83rem; color:var(--text-secondary); display:flex; flex-direction:column; gap:0.55rem;">
+              <div>
+                <strong style="color:#f8fafc;">🏢 Weekdays (Mon–Fri, Off Work 6–7 PM):</strong>
+                <span>19:00–20:40 (2 PW Lecs @ 2.25x) → 20:40–21:05 (Spaced Quiz/Flashcards) → <strong style="color:#6ee7b7;">21:05–21:50 (45m Gaming Break 🎮)</strong> → 21:50–22:50 (1 PW Lec or TWT Test) → 22:50–23:50 (Udemy FDE / Notes) → 12:00 AM Bedtime.</span>
+              </div>
+              <div>
+                <strong style="color:#f8fafc;">☀️ Weekends (Sat–Sun, All Day Free):</strong>
+                <span>09:00–11:30 (3 PW Lecs @ 2.25x) → 12:00–13:30 (SWT/MST Test) → 15:00–16:30 (Ed Donner FDE 1.5h) → <strong style="color:#6ee7b7;">16:30–18:00 (90m Gaming Session 🎮)</strong> → 18:00–19:50 (2 PW Lecs) → 20:50–23:15 (Spaced Recall &amp; Test Analysis).</span>
+              </div>
+              <div>
+                <strong style="color:#fcd34d;">🌙 12:00 AM – 1:30 AM Late-Night Push Flex:</strong>
+                <span>Built-in overtime cushion if you miss a slot or want to finish a tough topic—never forced daily so you don't burn out.</span>
+              </div>
+              <div>
+                <strong style="color:#6ee7b7;">🏁 3-Week Buffer Window (Jan 17 – Feb 5, 2027):</strong>
+                <span>All 11 ECE subjects + 21.5h FDE course finish by <strong>16 Jan 2027</strong>, leaving <strong>20 full days</strong> before <strong>6 Feb 2027</strong> for Full-Length GBG Mocks, PYQs &amp; Rapid Revision!</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">🗺️ 11-Subject Completion Milestones</div>
+              <span style="font-size:0.75rem; color:var(--text-secondary);">Ordered to unlock PW TWT 1–21 &amp; SWT 1–10</span>
+            </div>
+            <div id="dashboardSubjectMilestones" style="display:flex; flex-direction:column; gap:0.55rem;"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 2: 88-DAY DAILY PLANNER -->
+    <section class="tab-panel" id="tab-planner">
+      <div class="card" style="margin-bottom:1.25rem;">
+        <div class="card-header">
+          <div>
+            <div class="card-title">📅 Complete 88-Day Master Planner (10 Nov 2026 → 6 Feb 2027)</div>
+            <div style="font-size:0.8rem; color:var(--text-secondary);">
+              Click any day below to inspect or customize its time-blocked schedule. Green underline = Weekend (All Day Free). Amber top border = 3-Week Pre-Exam Buffer Phase.
+            </div>
+          </div>
+          <div class="filter-bar" style="margin-bottom:0;" id="plannerMonthFilter">
+            <button class="btn btn-sm btn-primary" data-month="ALL">All 89 Days</button>
+            <button class="btn btn-sm" data-month="2026-11">Nov 2026 (21d)</button>
+            <button class="btn btn-sm" data-month="2026-12">Dec 2026 (31d)</button>
+            <button class="btn btn-sm" data-month="2027-01">Jan 2027 (31d)</button>
+            <button class="btn btn-sm" data-month="2027-02">Feb 2027 (6d)</button>
+          </div>
+        </div>
+
+        <div class="day-strip" id="plannerDayStrip"></div>
+      </div>
+
+      <div class="two-col-grid">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title" id="plannerSelectedDayTitle">Day 1 Schedule</div>
+              <div style="font-size:0.78rem; color:var(--text-secondary);" id="plannerSelectedDayMeta"></div>
+            </div>
+            <div style="display:flex; gap:0.45rem;">
+              <button class="btn btn-sm btn-amber" id="plannerPushLateBtn">🌙 Push Unfinished to 12–1:30 AM</button>
+              <button class="btn btn-sm btn-emerald" id="plannerDeferNextBtn">⏭️ Move Unfinished to Next Day</button>
+            </div>
+          </div>
+          <div class="task-list" id="plannerSelectedDayTasks"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">➕ Add Custom Task / Override Slot</div>
+          </div>
+          <form id="addCustomTaskForm" style="display:flex; flex-direction:column; gap:0.75rem;">
+            <div>
+              <label style="font-size:0.78rem; color:var(--text-secondary); display:block; margin-bottom:0.25rem;">Task Title</label>
+              <input type="text" id="customTaskTitle" class="input-sm" style="width:100%;" placeholder="e.g., Solve 25 Network Theory PYQs / Extra Gaming Break" required />
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:0.5rem;">
+              <div>
+                <label style="font-size:0.78rem; color:var(--text-secondary); display:block; margin-bottom:0.25rem;">Start Time</label>
+                <input type="text" id="customTaskStart" class="input-sm" style="width:100%;" value="21:50" />
+              </div>
+              <div>
+                <label style="font-size:0.78rem; color:var(--text-secondary); display:block; margin-bottom:0.25rem;">End Time</label>
+                <input type="text" id="customTaskEnd" class="input-sm" style="width:100%;" value="22:50" />
+              </div>
+              <div>
+                <label style="font-size:0.78rem; color:var(--text-secondary); display:block; margin-bottom:0.25rem;">Category</label>
+                <select id="customTaskType" class="input-sm" style="width:100%;">
+                  <option value="lecture">PW Lecture</option>
+                  <option value="test">PW Test Series</option>
+                  <option value="revision">Spaced Revision</option>
+                  <option value="fde">Udemy FDE</option>
+                  <option value="gaming">Gaming / Break</option>
+                  <option value="flex">12–2 AM Flex</option>
+                </select>
+              </div>
+            </div>
+            <div>
+              <label style="font-size:0.78rem; color:var(--text-secondary); display:block; margin-bottom:0.25rem;">Notes / Details</label>
+              <input type="text" id="customTaskSub" class="input-sm" style="width:100%;" placeholder="Specific chapter, link, or target goal" />
+            </div>
+            <button type="submit" class="btn btn-primary">Add Task to Selected Day</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: 11 GATE ECE SUBJECTS & PW VIDEO SERIES -->
+    <section class="tab-panel" id="tab-subjects">
+      <div class="card" style="margin-bottom:1.25rem;">
+        <div class="card-header" style="margin-bottom:0.4rem;">
+          <div>
+            <div class="card-title">📺 PW GATE ECE Video Series Tracker (2027 Batch + 2026 YouTube Fallback)</div>
+            <div style="font-size:0.82rem; color:var(--text-secondary);">
+              Each subject has ~15 lectures (1.5–2 hrs raw → ~45 mins at 2.25x speed). Subjects not yet uploaded in your PW 2027 Batch automatically point to the <strong>PW GATE Wallah 2026 YouTube Series</strong>—and you can toggle any subject's source with one click!
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="subjects-grid" id="subjectsGridContainer"></div>
+    </section>
+
+    <!-- TAB 4: 56 PW TEST SERIES HUB -->
+    <section class="tab-panel" id="tab-tests">
+      <div class="card" style="margin-bottom:1.25rem;">
+        <div class="card-header">
+          <div>
+            <div class="card-title">📝 PW GATE 2027 ECE Test Series Tracker (All 56 Tests)</div>
+            <div style="font-size:0.8rem; color:var(--text-secondary);">
+              Transcribed from your PW Test Series Planner PDF: <strong>21 TWT</strong> (Topicwise) + <strong>10 SWT</strong> (Subjectwise) + <strong>8 MST</strong> (Multi-Subject) + <strong>5 PYQ</strong> (2022–2026) + <strong>12 GBG</strong> (Full-Length GATE Before GATE). Scheduled dynamically right as you finish each topic/subject!
+            </div>
+          </div>
+          <div class="filter-bar" style="margin-bottom:0;" id="testCategoryFilterBar">
+            <button class="btn btn-sm btn-primary" data-cat="ALL">All (56)</button>
+            <button class="btn btn-sm" data-cat="TWT">TWT Topicwise (21)</button>
+            <button class="btn btn-sm" data-cat="SWT">SWT Subjectwise (10)</button>
+            <button class="btn btn-sm" data-cat="MST">MST Multi-Subject (8)</button>
+            <button class="btn btn-sm" data-cat="PYQ">GATE PYQ (5)</button>
+            <button class="btn btn-sm" data-cat="GBG">GBG Full Length (12)</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="test-grid" id="testsGridContainer"></div>
+    </section>
+
+    <!-- TAB 5: SPACED REPETITION ARENA (FLASHCARDS & ACTIVE RECALL QUIZ) -->
+    <section class="tab-panel" id="tab-recall">
+      <div class="two-col-grid">
+        <!-- Left: SM-2 Flashcard Deck -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">🃏 Spaced Repetition Formula &amp; Concept Flashcards</div>
+              <div style="font-size:0.78rem; color:var(--text-secondary);">
+                Uses the SM-2 algorithm to schedule reviews (+1d, +3d, +7d, +14d, +25d) so completed subjects stay fresh until Feb 6.
+              </div>
+            </div>
+            <select id="flashcardSubjectFilter" class="input-sm">
+              <option value="ALL">All 11 ECE Subjects</option>
+            </select>
+          </div>
+
+          <div class="flashcard-stage" id="flashcardStage">
+            <span class="badge-pill" id="fcBadge" style="margin-bottom:0.75rem;">NT</span>
+            <div class="fc-question" id="fcFrontText">Loading Flashcard...</div>
+            <div class="fc-answer" id="fcBackText" style="display:none;"></div>
+            <div style="margin-top:1rem; font-size:0.75rem; color:var(--text-muted);" id="fcFlipHint">
+              👆 Click card to reveal answer &amp; formula
+            </div>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:1rem; flex-wrap:wrap; gap:0.5rem;">
+            <div style="display:flex; gap:0.4rem;">
+              <button class="btn btn-sm" id="fcPrevBtn">◀ Prev</button>
+              <button class="btn btn-sm" id="fcFlipBtn">Flip Answer</button>
+              <button class="btn btn-sm" id="fcNextBtn">Next ▶</button>
+            </div>
+            <div style="display:flex; gap:0.4rem; flex-wrap:wrap;">
+              <button class="btn btn-sm btn-rose" data-rating="again">Again (1d)</button>
+              <button class="btn btn-sm btn-amber" data-rating="hard">Hard (+2d)</button>
+              <button class="btn btn-sm btn-primary" data-rating="good">Good (+4d)</button>
+              <button class="btn btn-sm btn-emerald" data-rating="easy">Easy (+7d)</button>
+            </div>
+          </div>
+
+          <!-- Add New Flashcard -->
+          <details style="margin-top:1.25rem; border-top:1px solid var(--border-subtle); padding-top:0.85rem;">
+            <summary style="cursor:pointer; font-size:0.85rem; font-weight:600; color:#93c5fd;">
+              ➕ Create Custom Formula / Mistake Flashcard
+            </summary>
+            <form id="newFlashcardForm" style="margin-top:0.75rem; display:flex; flex-direction:column; gap:0.6rem;">
+              <select id="newFcSubject" class="input-sm"></select>
+              <input type="text" id="newFcFront" class="input-sm" placeholder="Front: Question, Theorem or Concept..." required />
+              <textarea id="newFcBack" class="input-sm" rows="3" placeholder="Back: Formula, Shortcut or Key Trick..." required></textarea>
+              <button type="submit" class="btn btn-sm btn-primary">Save Flashcard to Deck</button>
+            </form>
+          </details>
+        </div>
+
+        <!-- Right: Interactive GATE ECE Active Recall Quiz -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">⚡ Active Recall GATE ECE Quiz Engine</div>
+              <div style="font-size:0.78rem; color:var(--text-secondary);">
+                Test your retention of completed subjects with GATE-level conceptual &amp; numerical problems.
+              </div>
+            </div>
+            <select id="quizSubjectFilter" class="input-sm">
+              <option value="ALL">All Subjects Mix</option>
+            </select>
+          </div>
+
+          <div id="quizContainer"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 6: ED DONNER FDE UDEMY COURSE (21.5 HOURS) -->
+    <section class="tab-panel" id="tab-fde">
+      <div class="card" style="margin-bottom:1.25rem;">
+        <div class="card-header">
+          <div>
+            <div class="card-title">🤖 Ed Donner FDE / AI &amp; LLM Engineering Udemy Course (21.5 Hours)</div>
+            <div style="font-size:0.82rem; color:var(--text-secondary);">
+              Broken into 22 hands-on modules (~55–60 mins each) and scheduled on Tue/Thu evenings + Weekend afternoons (15:00–16:30) so you finish all 21.5 hours before your January GATE Buffer Phase!
+            </div>
+          </div>
+          <div id="fdeSummaryBadge" class="badge-pill">0 / 21.5 hrs</div>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill purple" id="fdeOverallBar" style="width:0%;"></div>
+        </div>
+      </div>
+
+      <div class="test-grid" id="fdeModulesGrid"></div>
+    </section>
+
+    <!-- TAB 7: POMODORO STUDIO & FREE CLOUD DEPLOYMENT GUIDE -->
+    <section class="tab-panel" id="tab-pomodoro">
+      <div class="two-col-grid">
+        <!-- Left: Full Pomodoro & Exam Clock Studio -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">⏱️ Pomodoro &amp; GATE Test Simulator Timer</div>
+            <span class="badge-pill" id="pomoCurrentModeBadge">45m Lecture Sprint (2.25x)</span>
+          </div>
+
+          <div class="pomo-clock-display" id="mainPomoDisplay">45:00</div>
+
+          <div style="display:flex; justify-content:center; gap:0.65rem; flex-wrap:wrap; margin-bottom:1.25rem;">
+            <button class="btn btn-primary" id="mainPomoStartBtn">▶ Start / Pause</button>
+            <button class="btn" id="mainPomoResetBtn">↺ Reset</button>
+            <button class="btn btn-emerald" id="mainPomoLogBtn">✓ Complete &amp; Log Session</button>
+          </div>
+
+          <div style="border-top:1px solid var(--border-subtle); padding-top:1rem;">
+            <div style="font-size:0.8rem; font-weight:600; color:var(--text-secondary); margin-bottom:0.6rem;">
+              Select Study / Test / Recharge Preset:
+            </div>
+            <div style="display:flex; gap:0.5rem; flex-wrap:wrap;" id="pomoPresetButtons">
+              <button class="btn btn-sm btn-primary" data-mins="45" data-label="45m PW Lecture Sprint (1 Lec @ 2.25x)">📺 45m Lecture Sprint</button>
+              <button class="btn btn-sm" data-mins="25" data-label="25m Classic Pomodoro">🍅 25m Pomodoro</button>
+              <button class="btn btn-sm" data-mins="45" data-label="45m Topicwise Test (TWT)">📝 45m TWT Exam</button>
+              <button class="btn btn-sm" data-mins="90" data-label="90m Subject/Multi Test (SWT/MST)">📝 90m SWT/MST Exam</button>
+              <button class="btn btn-sm" data-mins="180" data-label="180m Full-Length GATE Mock (GBG)">🏆 180m Full GATE Mock</button>
+              <button class="btn btn-sm btn-emerald" data-mins="45" data-label="45m Guilt-Free Gaming Recharge">🎮 45m Gaming Break</button>
+            </div>
+          </div>
+
+          <div style="border-top:1px solid var(--border-subtle); padding-top:1rem; margin-top:1rem;">
+            <div style="font-size:0.85rem; font-weight:700; margin-bottom:0.5rem;">Recent Focus &amp; Gaming Sessions</div>
+            <div id="pomoHistoryList" style="display:flex; flex-direction:column; gap:0.4rem; font-size:0.8rem; color:var(--text-secondary);"></div>
+          </div>
+        </div>
+
+        <!-- Right: Step-by-Step Free Deployment Guide -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">☁️ Deploy Your GATE Companion for Free (24/7 Cloud Access)</div>
+            <span class="badge-pill">Zero Cost Hosting</span>
+          </div>
+          <div style="font-size:0.84rem; color:var(--text-secondary); display:flex; flex-direction:column; gap:0.85rem;">
+            <p>
+              This application is built as a unified <strong>Node.js + Express REST API + Static SPA Frontend</strong> with a pre-configured <code>render.yaml</code> and <code>Dockerfile</code> so you can deploy both Frontend and Backend together in 2 minutes for free!
+            </p>
+
+            <div>
+              <strong style="color:#6ee7b7;">Option 1: Render.com (Recommended — 100% Free Web Service)</strong>
+              <ol style="padding-left:1.2rem; margin-top:0.35rem;">
+                <li>Push this folder (<code>GATE_Application</code>) to a GitHub repository.</li>
+                <li>Go to <a href="https://render.com" target="_blank" style="color:#38bdf8;">render.com</a> → <strong>New +</strong> → <strong>Web Service</strong> → Connect your GitHub repo.</li>
+                <li>Set <strong>Build Command</strong>: <code>npm install</code> and <strong>Start Command</strong>: <code>npm start</code> (or use Blueprints with the included <code>render.yaml</code>).</li>
+                <li>Click <strong>Deploy Web Service</strong> — your live URL will be ready in ~60 seconds!</li>
+              </ol>
+            </div>
+
+            <div>
+              <strong style="color:#a5b4fc;">Option 2: Koyeb / Fly.io / HuggingFace Spaces (Docker Free Tier)</strong>
+              <p style="margin-top:0.25rem;">
+                A production <code>Dockerfile</code> is included in the project root. You can deploy it directly to <strong>Koyeb Free Tier</strong>, <strong>Fly.io</strong>, or a <strong>HuggingFace Docker Space</strong> (16GB RAM free, never sleeps!).
+              </p>
+              <div class="code-block">git init
+git add .
+git commit -m "Initial GATE 2027 ECE Companion"
+git branch -M main
+git remote add origin https://github.com/YOUR_USERNAME/gate-2027-companion.git
+git push -u origin main</div>
+            </div>
+
+            <div>
+              <strong style="color:#fcd34d;">💾 Browser + Backend Hybrid Persistence:</strong>
+              <p style="margin-top:0.25rem;">
+                Your progress is saved both to the backend database (<code>backend/data/db.json</code>) AND mirrored to your browser's <code>localStorage</code> + one-click JSON Backup Export/Import below so even on ephemeral free-tier containers your progress is never lost!
+              </p>
+              <div style="display:flex; gap:0.5rem; margin-top:0.5rem; flex-wrap:wrap;">
+                <button class="btn btn-sm btn-primary" id="exportBackupBtn">⬇️ Export Progress Backup (.json)</button>
+                <button class="btn btn-sm btn-rose" id="resetSeedBtn">↺ Reset to Default Schedule</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="/app.js"></script>
+</body>
+</html>
